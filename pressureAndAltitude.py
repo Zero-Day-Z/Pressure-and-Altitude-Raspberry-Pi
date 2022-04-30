@@ -54,8 +54,8 @@ altitude = bmp.readAltitude()
 altitude = bmp.readAltitude(101325)
 pressure = (pressure / 100) 
 
-print "Pressure:    %.2f hPa" % (pressure / 100.0)
-print "Altitude:    %.2f" % altitude
+print("Pressure:    %.2f hPa" % (pressure / 100.0))
+print("Altitude:    %.2f" % altitude)
 
 sender = Emailer()
 sendTo = #recipient email
