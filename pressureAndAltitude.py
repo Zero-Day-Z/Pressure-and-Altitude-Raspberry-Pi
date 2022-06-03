@@ -1,11 +1,14 @@
-from Adafruit_BMP085 import BMP085
+import Adafruit_BMP.BMP085 as BMP085
 import smtplib
+import time
 
+#sensor
+sensor = BMP085.BMP085()
 #Initialize Email
 SMTP_SERVER = 'smtp.gmail.com' #Email Server (don't change!)
 SMTP_PORT = 587 #Server Port (don't change!)
-GMAIL_USERNAME = #email
-GMAIL_PASSWORD = #password
+GMAIL_USERNAME = #Enter login email here
+GMAIL_PASSWORD =  #Enter password to email here
 
 class Emailer:
     def sendmail(self, recipient,  subject, content):
@@ -26,39 +29,18 @@ class Emailer:
         #Send Email & Exit
         session.sendmail(GMAIL_USERNAME, recipient, headers + "\r\n\r\n" + content)
         session.quit
+while True:
+    pressure = sensor.read_pressure()
+    altitude = sensor.read_altitude()
+    pressure = round(pressure, 2)
+    altitude = round(altitude, 2)
+    print(pressure,"Pa")
+    print(altitude, "m")
 
-# Initialise the BMP085 and use STANDARD mode (default value)
-bmp = BMP085(0x77, debug=True)
-bmp = BMP085(0x77)
- 
-# To specify a different operating mode, uncomment one of the following:
-# bmp = BMP085(0x77, 0)  # ULTRALOWPOWER Mode
-bmp = BMP085(0x77, 1)  # STANDARD Mode
-# bmp = BMP085(0x77, 2)  # HIRES Mode
-# bmp = BMP085(0x77, 3)  # ULTRAHIRES Mode
- 
-temp = bmp.readTemperature()
- 
-# Read the current barometric pressure level
-pressure = bmp.readPressure()
- 
-# To calculate altitude based on an estimated mean sea level pressure
-# (1013.25 hPa) call the function as follows, but this won't be very accurate
-altitude = bmp.readAltitude()
- 
-# To specify a more accurate altitude, enter the correct mean sea level
-# pressure level.  For example, if the current pressure level is 1023.50 hPa
-# enter 102350 since we include two decimal places in the integer value
-#current mean sea level according to google: 1013.25 hPa
+    sender = Emailer()
+    sendTo = #Enter recipient email here
+    emailSubject = "IOT Research: BMP180"
+    emailContent = "This is the Pi in the lab.\n Pressure and Altitude measurements below:\n Pressure: " +str(pressure) +"\nAltitude: "+str(altitude)
+    sender.sendmail(sendTo, emailSubject, emailContent)
+    time.sleep(2)
 
-altitude = bmp.readAltitude(101325)
-pressure = (pressure / 100) 
-
-print("Pressure:    %.2f hPa" % (pressure / 100.0))
-print("Altitude:    %.2f" % altitude)
-
-sender = Emailer()
-sendTo = #recipient email
-emailSubject = "IOT Research: BMP180"
-emailContent = "This is the Pi in the lab.\n Pressure and Altitude measurements below:\n Pressure: " +str(pressure) +"\nAltitude: "+str(altitude)
-sender.sendmail(sendTo, emailSubject, emailContent)
